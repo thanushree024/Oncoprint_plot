@@ -4,7 +4,7 @@ library(ComplexHeatmap)
 library(grid)
 
 # Load mutation data from Excel
-mutation_data <- read_excel("C:/Users/Thanu/OneDrive/Desktop/For_Oncoprint.xlsx", sheet = "Sheet1")
+mutation_data <- read_excel("path/to/excel/file/For_Oncoprint.xlsx", sheet = "Sheet1")
 mutation_data <- as.matrix(mutation_data)
 
 # Set row names and remove the first column (assuming it's a gene identifier)
@@ -15,7 +15,7 @@ mutation_data <- mutation_data[, -1]
 #mutation_data[is.na(mutation_data)] <- ""
 
 # Load cancer types from a separate Excel sheet
-cancer_types <- read_excel("C:/Users/Thanu/OneDrive/Desktop/For_Oncoprint.xlsx", sheet = "Sheet2")
+cancer_types <- read_excel("path/to/excel/file/For_Oncoprint.xlsx", sheet = "Sheet2")
 cancer_types <- as.matrix(cancer_types)
 cancer_types <- cancer_types[, 1]
 
