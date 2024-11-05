@@ -1,0 +1,84 @@
+# Load necessary libraries
+library(readxl)
+library(ComplexHeatmap)
+library(grid)
+
+# Load mutation data from Excel
+mutation_data <- read_excel("C:/Users/Thanu/OneDrive/Desktop/For_Oncoprint.xlsx", sheet = "Sheet1")
+mutation_data <- as.matrix(mutation_data)
+
+# Set row names and remove the first column (assuming it's a gene identifier)
+rownames(mutation_data) <- mutation_data[, 1]
+mutation_data <- mutation_data[, -1]
+
+# Replace NA values with empty strings for plotting
+#mutation_data[is.na(mutation_data)] <- ""
+
+# Load cancer types from a separate Excel sheet
+cancer_types <- read_excel("C:/Users/Thanu/OneDrive/Desktop/For_Oncoprint.xlsx", sheet = "Sheet2")
+cancer_types <- as.matrix(cancer_types)
+cancer_types <- cancer_types[, 1]
+
+# Define colors for cancer types
+cancer_colors <- c(
+  "Lung_cancer" = "#B5E1B1",   # Light Green
+  "Breast_cancer" = "#F0B2C5", # Light Pink
+  "Ovarian_cancer" = "#D4C1E2",# Light Purple
+  "GI_cancer" = "#F2E3B2",     # Light Yellow
+  "H&N_cancer" = "#F4C8CC"     # Light Red
+)
+
+# Define colors for mutation types (darker shades)
+mutation_colors <- c(
+  "snv" = "#6A4B93",  # Dark Purple
+  "indel" = "#2A9D8F",# Dark Teal
+  "del" = "#3B3B98",  # Dark Blue
+  "dup" = "#E9C46A",  # Dark Gold
+  "fs" = "#F95D6A"    # Dark Coral
+)
+
+# Create annotation for cancer types (bottom annotation)
+bottom_annotation <- HeatmapAnnotation(
+  Cancer_Type = cancer_types,
+  col = list(Cancer_Type = cancer_colors),
+  annotation_name_side = "left")
+
+alter_fun <- list(
+  background = function(x, y, w, h) {
+    grid.rect(x, y, w, h, gp = gpar(fill = "gray90", col = NA))
+  },
+  snv = function(x, y, w, h) {
+    grid.rect(x, y, w*0.9, h*0.9, gp = gpar(fill = mutation_colors["snv"], col = NA))
+  },
+  indel = function(x, y, w, h) {
+    grid.rect(x, y, w*0.9, h*0.9, gp = gpar(fill = mutation_colors["indel"], col = NA))
+  },
+  del = function(x, y, w, h) {
+    grid.rect(x, y, w*0.9, h*0.9, gp = gpar(fill = mutation_colors["del"], col = NA))
+  },
+  dup = function(x, y, w, h) {
+    grid.rect(x, y, w*0.9, h*0.9, gp = gpar(fill = mutation_colors["dup"], col = NA))
+  },
+  fs = function(x, y, w, h) {
+    grid.rect(x, y, w*0.9, h*0.9, gp = gpar(fill = mutation_colors["fs"], col = NA))
+  },
+  "NA" = function(x, y, w, h) {
+    # Define a function for NA if desired, or leave it as a background
+    grid.rect(x, y, w, h, gp = gpar(fill = "gray90", col = NA))
+  }
+)
+    
+oncoPrint(mutation_data,
+          alter_fun = alter_fun,
+          col = mutation_colors,
+          row_names_side = "left",
+          pct_side = "right",
+          column_title = "OncoPrint for Mutation Types",
+          bottom_annotation = bottom_annotation,
+          alter_fun_is_vectorized = FALSE,
+          show_row_names = TRUE,
+          show_column_names = FALSE,
+          column_names_rot = 45,
+          heatmap_legend_param = list(title = "Alterations",
+                                      at = c("snv", "indel", "del", "dup", "fs"),
+                                      labels = c("SNV", "Indel", "Deletion", "Duplication", "Frameshift")))
