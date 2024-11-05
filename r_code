@@ -58,11 +58,8 @@ alter_fun <- list(
   },
   fs = function(x, y, w, h) {
     grid.rect(x, y, w*0.9, h*0.9, gp = gpar(fill = mutation_colors["fs"], col = NA))
-  },
-  "NA" = function(x, y, w, h) {
-    # Define a function for NA if desired, or leave it as a background
-    grid.rect(x, y, w, h, gp = gpar(fill = "gray90", col = NA))
   }
+ 
 )
     
 oncoPrint(mutation_data,
