@@ -11,9 +11,6 @@ mutation_data <- as.matrix(mutation_data)
 rownames(mutation_data) <- mutation_data[, 1]
 mutation_data <- mutation_data[, -1]
 
-# Replace NA values with empty strings for plotting
-#mutation_data[is.na(mutation_data)] <- ""
-
 # Load cancer types from a separate Excel sheet
 cancer_types <- read_excel("path/to/excel/file/For_Oncoprint.xlsx", sheet = "Sheet2")
 cancer_types <- as.matrix(cancer_types)
